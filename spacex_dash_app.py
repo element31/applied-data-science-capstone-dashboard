@@ -14,6 +14,14 @@ min_payload = spacex_df['Payload Mass (kg)'].min()
 # Create a dash application
 app = dash.Dash(__name__)
 
+sites = spacex_df['Launch Site'].unique()
+default_option = 'ALL'
+options = [{'label': 'All Sites', 'value': default_option}]
+for site in sites:
+    options.append({'label': site, 'value': site})
+
+site_dropdown_id = 'site-dropdown'
+
 # Create an app layout
 app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
                                         style={'textAlign': 'center', 'color': '#503D36',
@@ -22,7 +30,13 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
                                 # The default select value is for ALL sites
                                 # dcc.Dropdown(id='site-dropdown',...)
                                 html.Br(),
-
+                                html.Div([
+                                    dcc.Dropdown(id = site_dropdown_id,
+                                        options = options,
+                                        value = default_option,
+                                        placeholder = 'Select a Launch Site here',
+                                        searchable = True)
+                                ]),
                                 # TASK 2: Add a pie chart to show the total successful launches count for all sites
                                 # If a specific launch site was selected, show the Success vs. Failed counts for the site
                                 html.Div(dcc.Graph(id='success-pie-chart')),
